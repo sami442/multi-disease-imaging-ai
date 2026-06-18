@@ -275,13 +275,17 @@ MODELS = {
 
 
 @st.cache_resource(show_spinner=False)
-def load_tflite_model(filename):
-    """Load a TFLite interpreter from the models/ directory next to this file."""
+def load_model(filename):
+    """Load a TFLite interpreter using TensorFlow's bundled lite module."""
     try:
-        import tflite_runtime.interpreter as tflite
+        import tensorflow as tf
         base_dir = os.path.dirname(os.path.abspath(__file__))
         model_path = os.path.join(base_dir, "models", filename)
-        interpreter = tflite.Interpreter(model_path=model_path)
+        if not os.path.exists(model_path):
+            available = os.listdir(os.path.join(base_dir, "models")) \
+                if os.path.exists(os.path.join(base_dir, "models")) else "models/ folder missing"
+            return None, f"{model_path} not found. Contents of models/: {available}"
+        interpreter = tf.lite.Interpreter(model_path=model_path)
         interpreter.allocate_tensors()
         return interpreter, None
     except Exception as err:
