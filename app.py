@@ -1,5 +1,5 @@
 import streamlit as st
-import numpy as np
+import numpy as nphttps://github.com/sami442/multi-disease-imaging-ai/edit/main/app.py
 from PIL import Image
 import os
 
@@ -179,7 +179,7 @@ MODELS = {
     },
 }
 
-MODEL_FOLDER = "model"  # matches the actual folder name in this repo
+MODEL_FOLDER = "models"  # matches the actual folder name in this repo
 
 
 @st.cache_resource(show_spinner=False)
