@@ -179,17 +179,19 @@ MODELS = {
     },
 }
 
+MODEL_FOLDER = "model"  # matches the actual folder name in this repo
+
 
 @st.cache_resource(show_spinner=False)
 def load_model(filename):
     try:
         import tensorflow as tf
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        model_path = os.path.join(base_dir, "models", filename)
+        model_path = os.path.join(base_dir, MODEL_FOLDER, filename)
         if not os.path.exists(model_path):
-            models_dir = os.path.join(base_dir, "models")
-            available = os.listdir(models_dir) if os.path.exists(models_dir) else "models/ folder missing"
-            return None, f"{model_path} not found. Contents of models/: {available}"
+            models_dir = os.path.join(base_dir, MODEL_FOLDER)
+            available = os.listdir(models_dir) if os.path.exists(models_dir) else f"{MODEL_FOLDER}/ folder missing"
+            return None, f"{model_path} not found. Contents: {available}"
         interpreter = tf.lite.Interpreter(model_path=model_path)
         interpreter.allocate_tensors()
         return interpreter, None
@@ -300,16 +302,12 @@ ledger_data = [
     ("Skin Lesion", "78.00%"),
     ("COVID-19", "75.83%"),
 ]
-ledger_html = "<div class='ledger-strip'>"
-for name, acc in ledger_data:
-    ledger_html += f"""
-    <div class='ledger-item'>
-        <p class='lname'>{name}</p>
-        <p class='lval'>{acc}</p>
-    </div>
-    """
-ledger_html += "</div>"
-st.markdown(ledger_html, unsafe_allow_html=True)
+ledger_items_html = "".join(
+    f"<div class='ledger-item'><p class='lname'>{name}</p>"
+    f"<p class='lval'>{acc}</p></div>"
+    for name, acc in ledger_data
+)
+st.markdown(f"<div class='ledger-strip'>{ledger_items_html}</div>", unsafe_allow_html=True)
 
 st.markdown("""
 <p style='font-family:"JetBrains Mono", monospace; font-size:0.75rem; color:#8A8270;'>
