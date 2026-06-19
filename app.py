@@ -1,5 +1,5 @@
 import streamlit as st
-import numpy as nphttps://github.com/sami442/multi-disease-imaging-ai/edit/main/app.py
+import numpy as np
 from PIL import Image
 import os
 
